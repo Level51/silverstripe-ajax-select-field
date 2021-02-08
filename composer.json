@@ -1,0 +1,37 @@
+{
+  "name": "level51/silverstripe-ajax-select-field",
+  "version": "0.0.1",
+  "time": "2021-02-08",
+  "description": "Ajax Select Field for Silverstripe using vue.js",
+  "keywords": [
+    "silverstripe",
+    "ajax",
+    "select",
+    "dropdown"
+  ],
+  "type": "silverstripe-vendormodule",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Level51",
+      "email": "hallo@lvl51.de"
+    }
+  ],
+  "require": {
+    "php": ">=7.1",
+    "ext-json": "*",
+    "silverstripe/framework": "^4"
+  },
+  "extra": {
+    "installer-name": "silverstripe-ajax-select-field",
+    "expose": [
+      "client"
+    ]
+  },
+  "minimum-stability": "dev",
+  "autoload": {
+    "psr-4": {
+      "Level51\\AjaxSelectField\\": "src/"
+    }
+  }
+}
