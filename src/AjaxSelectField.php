@@ -30,7 +30,7 @@ use SilverStripe\View\Requirements;
  *              }
  *
  *              $results = [];
- *              foreach (SiteTree::get()->find('Title:PartialMatch', $query) as $page) {
+ *              foreach (SiteTree::get()->filter('Title:PartialMatch', $query) as $page) {
  *                  $results[] = [ 'id' => $page->ID, 'title' => $page->Title ];
  *              }
  *
