@@ -1986,13 +1986,13 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 //
 //
 //
+//
 
 
  // Use commonJS build for ie compatibility
 
 /*
  * TODO
-  * input placeholder
   * possibility to add custom GET parameters
   * possibility to add custom ajax config
  */
@@ -2009,6 +2009,13 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       term: '',
       selection: null
     };
+  },
+  watch: {
+    cleanTerm: function cleanTerm(newVal) {
+      if (newVal.length < this.payload.config.minSearchChars && this.selection) {
+        this.selection = null;
+      }
+    }
   },
   components: {
     VueSimpleSuggest: (vue_simple_suggest_dist_cjs__WEBPACK_IMPORTED_MODULE_2___default())
@@ -18349,6 +18356,7 @@ var render = function() {
           attrs: {
             list: _vm.suggest,
             "display-attribute": "title",
+            "value-attribute": "id",
             debounce: 400,
             destyled: false,
             "prevent-submit": false
@@ -18365,7 +18373,7 @@ var render = function() {
         [
           _c("input", {
             attrs: {
-              placeholder: "Search",
+              placeholder: _vm.payload.placeholder,
               type: "text",
               name: "term",
               autocomplete: "off",

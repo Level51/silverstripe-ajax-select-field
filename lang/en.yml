@@ -1,0 +1,5 @@
+en:
+  Level51\AjaxSelectField\AjaxSelectField:
+    ERROR_SEARCH_CONFIG: Invalid field configuration, a searchEndpoint OR searchCallback has to be set
+    ERROR_INVALID_CALLBACK: Invalid callback passed in. Has do be a callable function.
+    SEARCH_PLACEHOLDER: Search

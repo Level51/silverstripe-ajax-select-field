@@ -4,13 +4,14 @@
       v-model="term"
       :list="suggest"
       display-attribute="title"
+      value-attribute="id"
       :debounce="400"
       :destyled="false"
       @select="selected"
       ref="suggestField"
       :prevent-submit="false">
       <input
-        placeholder="Search"
+        :placeholder="payload.placeholder"
         type="text"
         name="term"
         :value="term"
@@ -34,7 +35,6 @@ import VueSimpleSuggest from 'vue-simple-suggest/dist/cjs'; // Use commonJS buil
 
 /*
  * TODO
-  * input placeholder
   * possibility to add custom GET parameters
   * possibility to add custom ajax config
  */
@@ -50,6 +50,13 @@ export default {
       term: '',
       selection: null
     };
+  },
+  watch: {
+    cleanTerm(newVal) {
+      if (newVal.length < this.payload.config.minSearchChars && this.selection) {
+        this.selection = null;
+      }
+    }
   },
   components: { VueSimpleSuggest },
   created() {
