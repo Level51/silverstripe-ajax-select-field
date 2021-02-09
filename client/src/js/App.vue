@@ -52,6 +52,13 @@ export default {
     };
   },
   components: { VueSimpleSuggest },
+  created() {
+    if (this.payload.value && typeof this.payload.value === 'object') {
+      this.selection = this.payload.value;
+
+      this.term = this.payload.value.title;
+    }
+  },
   computed: {
     endpoint() {
       return this.payload.config.searchEndpoint;
@@ -88,10 +95,7 @@ export default {
     selected(suggestion) {
       if (!suggestion) return;
 
-      this.selection = {
-        id: suggestion.id,
-        title: suggestion.title
-      };
+      this.selection = { ...suggestion };
     },
     i18n(label) {
       const { i18n } = this.payload;

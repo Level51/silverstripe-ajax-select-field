@@ -47,7 +47,7 @@ class AjaxSelectField extends FormField
             [
                 'id'     => $this->ID(),
                 'name'   => $this->getName(),
-                'value'  => $this->Value(),
+                'value'  => ($value = $this->Value()) ? json_decode($value, true) : null,
                 'config' => [
                     'minSearchChars' => $this->minSearchChars,
                     'searchEndpoint' => $this->searchEndpoint ?: $this->Link('search')
@@ -56,7 +56,8 @@ class AjaxSelectField extends FormField
         );
     }
 
-    public function search(HTTPRequest $request) {
+    public function search(HTTPRequest $request)
+    {
         $searchResults = ($this->searchCallback)($request->getVar('query'), $request);
         $response = HTTPResponse::create();
         $response->addHeader('Access-Control-Allow-Origin', '*');
@@ -72,7 +73,8 @@ class AjaxSelectField extends FormField
         return $this;
     }
 
-    public function setSearchCallback($callback) {
+    public function setSearchCallback($callback)
+    {
         if ($callback && is_callable($callback)) {
             $this->searchCallback = $callback;
         } else {

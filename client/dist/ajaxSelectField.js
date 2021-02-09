@@ -1949,6 +1949,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var qs__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(qs__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var vue_simple_suggest_dist_cjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-simple-suggest/dist/cjs */ "./node_modules/vue-simple-suggest/dist/cjs.js");
 /* harmony import */ var vue_simple_suggest_dist_cjs__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(vue_simple_suggest_dist_cjs__WEBPACK_IMPORTED_MODULE_2__);
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 //
 //
 //
@@ -2005,6 +2013,12 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     VueSimpleSuggest: (vue_simple_suggest_dist_cjs__WEBPACK_IMPORTED_MODULE_2___default())
   },
+  created: function created() {
+    if (this.payload.value && _typeof(this.payload.value) === 'object') {
+      this.selection = this.payload.value;
+      this.term = this.payload.value.title;
+    }
+  },
   computed: {
     endpoint: function endpoint() {
       return this.payload.config.searchEndpoint;
@@ -2039,10 +2053,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     selected: function selected(suggestion) {
       if (!suggestion) return;
-      this.selection = {
-        id: suggestion.id,
-        title: suggestion.title
-      };
+      this.selection = _objectSpread({}, suggestion);
     },
     i18n: function i18n(label) {
       var i18n = this.payload.i18n;
