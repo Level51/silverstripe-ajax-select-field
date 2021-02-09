@@ -48,12 +48,12 @@ class AjaxSelectField extends FormField
     /**
      * @var int Min amount of characters needed to execute the search callback
      */
-    private int $minSearchChars = 3;
+    private $minSearchChars = 3;
 
     /**
      * @var string|null Search endpoint to call
      */
-    private ?string $searchEndpoint = null;
+    private $searchEndpoint = null;
 
     /**
      * @var callable|null Callback function to call on search
@@ -63,17 +63,17 @@ class AjaxSelectField extends FormField
     /**
      * @var string|null Custom placeholder for the search field
      */
-    private ?string $placeholder = null;
+    private $placeholder = null;
 
     /**
      * @var array|null Optional getVars which should be added to each search request
      */
-    private ?array $getVars = null;
+    private $getVars = null;
 
     /**
      * @var array|null Optional request headers sent with each search request
      */
-    private ?array $searchHeaders = null;
+    private $searchHeaders = null;
 
     /**
      * @var bool Option to store only the id instead of the full selection payload
