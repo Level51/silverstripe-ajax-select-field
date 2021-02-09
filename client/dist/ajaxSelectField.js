@@ -1991,12 +1991,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
  // Use commonJS build for ie compatibility
 
-/*
- * TODO
-  * possibility to add custom GET parameters
-  * possibility to add custom ajax config
- */
-
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: {
     payload: {
@@ -2031,9 +2025,13 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       return this.payload.config.searchEndpoint;
     },
     endpointWithParams: function endpointWithParams() {
-      var params = {
-        query: this.cleanTerm
-      };
+      var params = {};
+
+      if (this.payload.config.getVars && _typeof(this.payload.config.getVars) === 'object' && this.payload.config.getVars !== null) {
+        params = _objectSpread({}, this.payload.config.getVars);
+      }
+
+      params.query = this.cleanTerm;
       return "".concat(this.endpoint, "?").concat(qs__WEBPACK_IMPORTED_MODULE_1___default().stringify(params, {
         encode: true
       }));
@@ -2043,6 +2041,15 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     },
     dataValue: function dataValue() {
       return this.selection ? JSON.stringify(this.selection) : null;
+    },
+    searchAxiosConfig: function searchAxiosConfig() {
+      var config = {};
+
+      if (this.payload.config.headers && _typeof(this.payload.config.headers) === 'object' && this.payload.config.headers !== null) {
+        config.headers = _objectSpread({}, this.payload.config.headers);
+      }
+
+      return config;
     }
   },
   methods: {
@@ -2052,7 +2059,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       var cleanTerm = term && typeof term === 'string' ? term.trim() : null;
       return new Promise(function (resolve) {
         if (_this.cleanTerm.length < _this.payload.config.minSearchChars) resolve([]);else {
-          axios__WEBPACK_IMPORTED_MODULE_0___default().get(_this.endpointWithParams).then(function (response) {
+          axios__WEBPACK_IMPORTED_MODULE_0___default().get(_this.endpointWithParams, _this.searchAxiosConfig).then(function (response) {
             resolve(response.data);
           });
         }
@@ -18373,7 +18380,7 @@ var render = function() {
         [
           _c("input", {
             attrs: {
-              placeholder: _vm.payload.placeholder,
+              placeholder: _vm.payload.config.placeholder,
               type: "text",
               name: "term",
               autocomplete: "off",

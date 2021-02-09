@@ -11,7 +11,7 @@
       ref="suggestField"
       :prevent-submit="false">
       <input
-        :placeholder="payload.placeholder"
+        :placeholder="payload.config.placeholder"
         type="text"
         name="term"
         :value="term"
@@ -33,11 +33,6 @@ import axios from 'axios';
 import qs from 'qs';
 import VueSimpleSuggest from 'vue-simple-suggest/dist/cjs'; // Use commonJS build for ie compatibility
 
-/*
- * TODO
-  * possibility to add custom GET parameters
-  * possibility to add custom ajax config
- */
 export default {
   props: {
     payload: {
@@ -71,9 +66,15 @@ export default {
       return this.payload.config.searchEndpoint;
     },
     endpointWithParams() {
-      const params = {
-        query: this.cleanTerm
-      };
+      let params = {};
+
+      if (this.payload.config.getVars && typeof this.payload.config.getVars === 'object' && this.payload.config.getVars !== null) {
+        params = {
+          ...this.payload.config.getVars
+        }
+      }
+
+      params.query = this.cleanTerm
 
       return `${this.endpoint}?${qs.stringify(params, { encode: true })}`;
     },
@@ -82,6 +83,17 @@ export default {
     },
     dataValue() {
       return this.selection ? JSON.stringify(this.selection) : null;
+    },
+    searchAxiosConfig() {
+      const config = {};
+
+      if (this.payload.config.headers && typeof this.payload.config.headers === 'object' && this.payload.config.headers !== null) {
+        config.headers = {
+          ...this.payload.config.headers
+        };
+      }
+
+      return config;
     }
   },
   methods: {
@@ -92,7 +104,7 @@ export default {
         if (this.cleanTerm.length < this.payload.config.minSearchChars) resolve([]);
         else {
           axios
-            .get(this.endpointWithParams)
+            .get(this.endpointWithParams, this.searchAxiosConfig)
             .then((response) => {
               resolve(response.data);
             });

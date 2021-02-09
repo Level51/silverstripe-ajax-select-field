@@ -41,21 +41,29 @@ class AjaxSelectField extends FormField
     private int $minSearchChars = 3;
 
     /**
-     * @var string Search endpoint to call
+     * @var string|null Search endpoint to call
      */
     private ?string $searchEndpoint = null;
 
     /**
-     * Use either the searchEndpoint OR the searchCallback
-     *
-     * @var callable Callback function to call on search
+     * @var callable|null Callback function to call on search
      */
     private $searchCallback = null;
 
     /**
-     * @var string Custom placeholder for the search field
+     * @var string|null Custom placeholder for the search field
      */
     private ?string $placeholder = null;
+
+    /**
+     * @var array|null Optional getVars which should be added to each search request
+     */
+    private ?array $getVars = null;
+
+    /**
+     * @var array|null Optional request headers sent with each search request
+     */
+    private ?array $searchHeaders = null;
 
     public function __construct($name, $title = null, $value = null)
     {
@@ -74,17 +82,24 @@ class AjaxSelectField extends FormField
         return parent::Field($properties);
     }
 
+    /**
+     * Get the payload/config passed to the vue component.
+     *
+     * @return string
+     */
     public function getPayload(): string
     {
         return json_encode(
             [
-                'id'          => $this->ID(),
-                'name'        => $this->getName(),
-                'value'       => ($value = $this->Value()) ? json_decode($value, true) : null,
-                'placeholder' => $this->placeholder ?: _t(__CLASS__ . '.SEARCH_PLACEHOLDER'),
-                'config'      => [
+                'id'     => $this->ID(),
+                'name'   => $this->getName(),
+                'value'  => ($value = $this->Value()) ? json_decode($value, true) : null,
+                'config' => [
                     'minSearchChars' => $this->minSearchChars,
-                    'searchEndpoint' => $this->searchEndpoint ?: $this->Link('search')
+                    'searchEndpoint' => $this->searchEndpoint ?: $this->Link('search'),
+                    'placeholder'    => $this->placeholder ?: _t(__CLASS__ . '.SEARCH_PLACEHOLDER'),
+                    'getVars'        => $this->getVars,
+                    'headers'        => $this->searchHeaders
                 ]
             ]
         );
@@ -169,6 +184,37 @@ class AjaxSelectField extends FormField
     public function setPlaceholder($placeholder): AjaxSelectField
     {
         $this->placeholder = $placeholder;
+
+        return $this;
+    }
+
+    /**
+     * Set a list of custom GET vars which should be added to each request.
+     *
+     * Have to be in format ["key" => "value"].
+     *
+     * @param array $vars
+     * @return $this
+     */
+    public function setGetVars($vars): AjaxSelectField
+    {
+        $this->getVars = $vars;
+
+        return $this;
+    }
+
+    /**
+     * Set a list of custom request headers sent with each search request.
+     *
+     * Have to be in format ["key" => "value"].
+     *
+     * @param array $headers
+     *
+     * @return AjaxSelectField
+     */
+    public function setSearchHeaders($headers): AjaxSelectField
+    {
+        $this->searchHeaders = $headers;
 
         return $this;
     }
