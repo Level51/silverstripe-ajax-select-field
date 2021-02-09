@@ -2015,9 +2015,16 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     VueSimpleSuggest: (vue_simple_suggest_dist_cjs__WEBPACK_IMPORTED_MODULE_2___default())
   },
   created: function created() {
-    if (this.payload.value && _typeof(this.payload.value) === 'object') {
-      this.selection = this.payload.value;
-      this.term = this.payload.value.title;
+    if (this.payload.value) {
+      if (_typeof(this.payload.value) === 'object') {
+        this.selection = this.payload.value;
+        this.term = this.payload.value.title;
+      }
+
+      if (this.idOnlyMode && typeof this.payload.value === 'string') {
+        console.log("idonlymode with value ".concat(this.payload.value));
+        this.loadInitialValueDetails();
+      }
     }
   },
   computed: {
@@ -2040,7 +2047,11 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       return this.term && typeof this.term === 'string' ? this.term.trim() : '';
     },
     dataValue: function dataValue() {
-      return this.selection ? JSON.stringify(this.selection) : null;
+      if (this.selection) {
+        return this.idOnlyMode ? this.selection.id : JSON.stringify(this.selection);
+      }
+
+      return null;
     },
     searchAxiosConfig: function searchAxiosConfig() {
       var config = {};
@@ -2050,6 +2061,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
       }
 
       return config;
+    },
+    idOnlyMode: function idOnlyMode() {
+      return !!this.payload.config.idOnlyMode;
     }
   },
   methods: {
@@ -2072,6 +2086,26 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     i18n: function i18n(label) {
       var i18n = this.payload.i18n;
       return i18n.hasOwnProperty(label) ? i18n[label] : label;
+    },
+    loadInitialValueDetails: function loadInitialValueDetails() {
+      var _this2 = this;
+
+      if (!this.idOnlyMode) return;
+      var params = {};
+
+      if (this.payload.config.getVars && _typeof(this.payload.config.getVars) === 'object' && this.payload.config.getVars !== null) {
+        params = _objectSpread({}, this.payload.config.getVars);
+      }
+
+      params.id = this.payload.value;
+      axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(this.endpoint, "?").concat(qs__WEBPACK_IMPORTED_MODULE_1___default().stringify(params, {
+        encode: true
+      })), this.searchAxiosConfig).then(function (response) {
+        if (response && response.data) {
+          _this2.selection = response.data;
+          _this2.term = response.data.title;
+        }
+      });
     }
   }
 });

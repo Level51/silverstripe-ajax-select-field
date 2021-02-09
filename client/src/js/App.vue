@@ -55,10 +55,16 @@ export default {
   },
   components: { VueSimpleSuggest },
   created() {
-    if (this.payload.value && typeof this.payload.value === 'object') {
-      this.selection = this.payload.value;
+    if (this.payload.value) {
+      if (typeof this.payload.value === 'object') {
+        this.selection = this.payload.value;
+        this.term = this.payload.value.title;
+      }
 
-      this.term = this.payload.value.title;
+      if (this.idOnlyMode && typeof this.payload.value === 'string') {
+        console.log(`idonlymode with value ${this.payload.value}`);
+        this.loadInitialValueDetails();
+      }
     }
   },
   computed: {
@@ -71,10 +77,10 @@ export default {
       if (this.payload.config.getVars && typeof this.payload.config.getVars === 'object' && this.payload.config.getVars !== null) {
         params = {
           ...this.payload.config.getVars
-        }
+        };
       }
 
-      params.query = this.cleanTerm
+      params.query = this.cleanTerm;
 
       return `${this.endpoint}?${qs.stringify(params, { encode: true })}`;
     },
@@ -82,7 +88,11 @@ export default {
       return this.term && typeof this.term === 'string' ? this.term.trim() : '';
     },
     dataValue() {
-      return this.selection ? JSON.stringify(this.selection) : null;
+      if (this.selection) {
+        return this.idOnlyMode ? this.selection.id : JSON.stringify(this.selection);
+      }
+
+      return null;
     },
     searchAxiosConfig() {
       const config = {};
@@ -94,6 +104,9 @@ export default {
       }
 
       return config;
+    },
+    idOnlyMode() {
+      return !!this.payload.config.idOnlyMode;
     }
   },
   methods: {
@@ -119,6 +132,28 @@ export default {
     i18n(label) {
       const { i18n } = this.payload;
       return i18n.hasOwnProperty(label) ? i18n[label] : label;
+    },
+    loadInitialValueDetails() {
+      if (!this.idOnlyMode) return;
+
+      let params = {};
+
+      if (this.payload.config.getVars && typeof this.payload.config.getVars === 'object' && this.payload.config.getVars !== null) {
+        params = {
+          ...this.payload.config.getVars
+        };
+      }
+
+      params.id = this.payload.value;
+
+      axios
+        .get(`${this.endpoint}?${qs.stringify(params, { encode: true })}`, this.searchAxiosConfig)
+        .then((response) => {
+          if (response && response.data) {
+            this.selection = response.data;
+            this.term = response.data.title;
+          }
+        });
     }
   }
 };
