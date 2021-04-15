@@ -9,7 +9,8 @@
       :destyled="false"
       @select="selected"
       ref="suggestField"
-      :prevent-submit="false">
+      :prevent-submit="false"
+      :min-length="payload.config.minSearchChars">
       <input
         :placeholder="payload.config.placeholder"
         type="text"

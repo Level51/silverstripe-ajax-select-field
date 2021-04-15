@@ -1987,6 +1987,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 //
 //
 //
+//
 
 
  // Use commonJS build for ie compatibility
@@ -19543,7 +19544,8 @@ var render = function() {
             "value-attribute": "id",
             debounce: 400,
             destyled: false,
-            "prevent-submit": false
+            "prevent-submit": false,
+            "min-length": _vm.payload.config.minSearchChars
           },
           on: { select: _vm.selected },
           model: {
