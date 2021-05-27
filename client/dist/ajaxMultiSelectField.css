@@ -55,6 +55,19 @@
 .level51-ajaxSelectFieldBase .vue-simple-suggest .suggestions .misc-item {
   padding: 8px;
 }
+.level51-ajaxMultiSelectField .level51-ajaxMultiSelectField-items {
+  margin-top: 16px;
+}
+.level51-ajaxMultiSelectField .level51-ajaxMultiSelectField-items table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
+}
+.level51-ajaxMultiSelectField .level51-ajaxMultiSelectField-items table td,
+.level51-ajaxMultiSelectField .level51-ajaxMultiSelectField-items table th {
+  padding: 4px 8px;
+  border: 1px solid #ced5e1;
+}
 
 
-/*# sourceMappingURL=ajaxSelectField.css.map*/
+/*# sourceMappingURL=ajaxMultiSelectField.css.map*/
