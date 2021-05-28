@@ -6,6 +6,39 @@ use SilverStripe\Forms\FormField;
 use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
 
+/**
+ * Ajax multi select field.
+ *
+ * Allows to select multiple values/items using a custom api endpoint or callback function.
+ *
+ * Usage:
+ * ```
+ * AjaxMultiSelectField::create('MyField', 'AjaxSelectExample')
+ *      ->setSearchCallback(
+ *          function ($query, $request) {
+ *              // Return detail info for the selected ids on load
+ *              if ($ids = $request->getVar('ids')) {
+ *                  foreach (SiteTree::get()->filter('ID', $ids) as $page) {
+ *                      return [
+ *                          'id' => $page->ID,
+ *                          'title' => $page->Title,
+ *                          'urlSegment' => $page->URLSegment // example of a custom field, see also below
+ *                      ];
+ *                  }
+ *              }
+ *
+ *              $results = [];
+ *              foreach (SiteTree::get()->filter('Title:PartialMatch', $query) as $page) {
+ *                  $results[] = [ 'id' => $page->ID, 'title' => $page->Title, 'urlSegment' => $page->URLSegment ];
+ *              }
+ *
+ *              return $results;
+ *          }
+ *      )->setDisplayFields([ 'title' => 'Custom Label', 'urlSegment' => 'URL' ])
+ * ```
+ *
+ * @package Level51\AjaxSelectField
+ */
 class AjaxMultiSelectField extends FormField
 {
     use AjaxSelectFieldTrait;
