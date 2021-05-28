@@ -66,10 +66,6 @@ import axios from 'axios';
 import qs from 'qs';
 import selectFieldMixin from 'src/mixins/selectField';
 
-/**
- * TODO
- *  - tune styles
- */
 export default {
   mixins: [selectFieldMixin],
   data() {
@@ -113,7 +109,6 @@ export default {
     selected(suggestion) {
       if (!suggestion) return;
 
-      // TODO handle selection of already linked items
       this.items.push({ ...suggestion });
       setTimeout(() => {
         this.term = '';
@@ -154,13 +149,27 @@ export default {
     margin-top: @space-3;
 
     table {
-      border-collapse: collapse;
+      border-collapse: separate;
+      border-spacing: 0;
       table-layout: fixed;
       width: 100%;
+      border-radius: @border-radius;
+      border: 1px solid @color-light-grey;
+
+      tr:not(:last-child) {
+        td, th {
+          border-bottom: 1px solid @color-light-grey;
+        }
+      }
+
+      tr:hover {
+        td {
+          background: @color-ultralight-grey;
+        }
+      }
 
       td, th {
-        padding: @space-1 @space-2;
-        border: 1px solid @color-light-grey;
+        padding: @space-3;
       }
 
       .level51-ajaxMultiSelectField-actions {

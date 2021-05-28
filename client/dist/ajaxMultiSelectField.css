@@ -59,14 +59,23 @@
   margin-top: 16px;
 }
 .level51-ajaxMultiSelectField .level51-ajaxMultiSelectField-items table {
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   table-layout: fixed;
   width: 100%;
+  border-radius: 0.23rem;
+  border: 1px solid #ced5e1;
+}
+.level51-ajaxMultiSelectField .level51-ajaxMultiSelectField-items table tr:not(:last-child) td,
+.level51-ajaxMultiSelectField .level51-ajaxMultiSelectField-items table tr:not(:last-child) th {
+  border-bottom: 1px solid #ced5e1;
+}
+.level51-ajaxMultiSelectField .level51-ajaxMultiSelectField-items table tr:hover td {
+  background: #f0f4f7;
 }
 .level51-ajaxMultiSelectField .level51-ajaxMultiSelectField-items table td,
 .level51-ajaxMultiSelectField .level51-ajaxMultiSelectField-items table th {
-  padding: 4px 8px;
-  border: 1px solid #ced5e1;
+  padding: 16px;
 }
 .level51-ajaxMultiSelectField .level51-ajaxMultiSelectField-items table .level51-ajaxMultiSelectField-actions {
   width: 60px;

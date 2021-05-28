@@ -2171,11 +2171,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 
 
-/**
- * TODO
- *  - tune styles
- */
-
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   mixins: [src_mixins_selectField__WEBPACK_IMPORTED_MODULE_2__.default],
   data: function data() {
@@ -2223,8 +2218,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
     selected: function selected(suggestion) {
       var _this = this;
 
-      if (!suggestion) return; // TODO handle selection of already linked items
-
+      if (!suggestion) return;
       this.items.push(_objectSpread({}, suggestion));
       setTimeout(function () {
         _this.term = '';
