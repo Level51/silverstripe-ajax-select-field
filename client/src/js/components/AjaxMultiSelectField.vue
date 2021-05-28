@@ -45,6 +45,7 @@
           <td class="level51-ajaxMultiSelectField-actions">
             <a
               href=""
+              :title="$t('actions.remove')"
               @click.prevent="remove(item.id)">
               <i class="font-icon-link-broken" />
             </a>

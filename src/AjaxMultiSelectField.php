@@ -3,6 +3,7 @@
 namespace Level51\AjaxSelectField;
 
 use SilverStripe\Forms\FormField;
+use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
 
 class AjaxMultiSelectField extends FormField
@@ -65,6 +66,7 @@ class AjaxMultiSelectField extends FormField
                 'id'     => $this->ID(),
                 'name'   => $this->getName(),
                 'value'  => $this->getValueForComponent(),
+                'lang'   => substr(Security::getCurrentUser()->Locale, 0, 2),
                 'config' => [
                     'minSearchChars' => $this->minSearchChars,
                     'searchEndpoint' => $this->searchEndpoint ?: $this->Link('search'),

@@ -1,6 +1,7 @@
 import qs from 'qs';
 import axios from 'axios';
-import VueSimpleSuggest from 'vue-simple-suggest/dist/cjs'; // Use commonJS build for ie compatibility
+import VueSimpleSuggest from 'vue-simple-suggest/dist/cjs';
+import * as locales from 'src/lang';
 
 export default {
   props: {
@@ -8,6 +9,9 @@ export default {
       type: Object,
       required: true
     }
+  },
+  created() {
+    this.setLocale();
   },
   components: { VueSimpleSuggest },
   computed: {
@@ -43,6 +47,14 @@ export default {
     },
   },
   methods: {
+    setLocale() {
+      const locale = this.payload.lang ?? 'en';
+
+      if (this.$i18n) {
+        this.$i18n.setLocaleMessage(locale, locales[locale]);
+        this.$i18n.locale = locale;
+      }
+    },
     suggest() {
       return new Promise((resolve) => {
         if (this.cleanTerm.length < this.payload.config.minSearchChars) resolve([]);
@@ -54,10 +66,6 @@ export default {
             });
         }
       });
-    },
-    i18n(label) {
-      const { i18n } = this.payload;
-      return i18n.hasOwnProperty(label) ? i18n[label] : label;
-    },
+    }
   }
 };
