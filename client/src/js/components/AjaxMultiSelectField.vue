@@ -68,10 +68,7 @@ import selectFieldMixin from 'src/mixins/selectField';
 
 /**
  * TODO
- *  - add actions
- *  - i18n for actions
  *  - tune styles
- *
  */
 export default {
   mixins: [selectFieldMixin],
@@ -93,7 +90,24 @@ export default {
       }
 
       return null;
-    }
+    },
+    endpointWithParams() {
+      let params = {};
+
+      if (this.payload.config.getVars && typeof this.payload.config.getVars === 'object') {
+        params = {
+          ...this.payload.config.getVars
+        };
+      }
+
+      params.query = this.cleanTerm;
+
+      if (this.items.length > 0) {
+        params.items = this.items.map((item) => item.id);
+      }
+
+      return `${this.endpoint}?${qs.stringify(params, { encode: true })}`;
+    },
   },
   methods: {
     selected(suggestion) {
