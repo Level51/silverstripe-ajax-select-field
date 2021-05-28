@@ -2099,6 +2099,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2144,6 +2152,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       setTimeout(function () {
         _this.term = '';
       }, 10);
+    },
+    remove: function remove(id) {
+      var index = this.items.findIndex(function (item) {
+        return item.id === id;
+      });
+      this.items.splice(index, 1);
     },
     loadInitialValueDetails: function loadInitialValueDetails() {
       var _this2 = this;
@@ -19742,32 +19756,60 @@ var render = function() {
               [
                 _c(
                   "tr",
-                  _vm._l(_vm.payload.config.displayFields, function(
-                    label,
-                    key
-                  ) {
-                    return _c("th", { key: key }, [
-                      _vm._v("\n          " + _vm._s(label) + "\n        ")
-                    ])
-                  }),
-                  0
+                  [
+                    _vm._l(_vm.payload.config.displayFields, function(
+                      label,
+                      key
+                    ) {
+                      return _c("th", { key: key }, [
+                        _vm._v("\n          " + _vm._s(label) + "\n        ")
+                      ])
+                    }),
+                    _vm._v(" "),
+                    _c("th", {
+                      staticClass: "level51-ajaxMultiSelectField-actions"
+                    })
+                  ],
+                  2
                 ),
                 _vm._v(" "),
                 _vm._l(_vm.items, function(item) {
                   return _c(
                     "tr",
                     { key: item.id },
-                    _vm._l(_vm.payload.config.displayFields, function(
-                      label,
-                      key
-                    ) {
-                      return _c("td", { key: key + "_" + item.id }, [
-                        _vm._v(
-                          "\n          " + _vm._s(item[key]) + "\n        "
-                        )
-                      ])
-                    }),
-                    0
+                    [
+                      _vm._l(_vm.payload.config.displayFields, function(
+                        label,
+                        key
+                      ) {
+                        return _c("td", { key: key + "_" + item.id }, [
+                          _vm._v(
+                            "\n          " + _vm._s(item[key]) + "\n        "
+                          )
+                        ])
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "td",
+                        { staticClass: "level51-ajaxMultiSelectField-actions" },
+                        [
+                          _c(
+                            "a",
+                            {
+                              attrs: { href: "" },
+                              on: {
+                                click: function($event) {
+                                  $event.preventDefault()
+                                  return _vm.remove(item.id)
+                                }
+                              }
+                            },
+                            [_c("i", { staticClass: "font-icon-link-broken" })]
+                          )
+                        ]
+                      )
+                    ],
+                    2
                   )
                 })
               ],

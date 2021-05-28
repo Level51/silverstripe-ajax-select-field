@@ -68,6 +68,10 @@
   padding: 4px 8px;
   border: 1px solid #ced5e1;
 }
+.level51-ajaxMultiSelectField .level51-ajaxMultiSelectField-items table .level51-ajaxMultiSelectField-actions {
+  width: 60px;
+  text-align: center;
+}
 
 
 /*# sourceMappingURL=ajaxMultiSelectField.css.map*/

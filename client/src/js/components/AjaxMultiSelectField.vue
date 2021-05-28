@@ -32,6 +32,7 @@
             :key="key">
             {{ label }}
           </th>
+          <th class="level51-ajaxMultiSelectField-actions" />
         </tr>
         <tr
           v-for="item in items"
@@ -40,6 +41,13 @@
             v-for="(label, key) in payload.config.displayFields"
             :key="`${key}_${item.id}`">
             {{ item[key] }}
+          </td>
+          <td class="level51-ajaxMultiSelectField-actions">
+            <a
+              href=""
+              @click.prevent="remove(item.id)">
+              <i class="font-icon-link-broken" />
+            </a>
           </td>
         </tr>
       </table>
@@ -96,6 +104,10 @@ export default {
         this.term = '';
       }, 10);
     },
+    remove(id) {
+      const index = this.items.findIndex((item) => item.id === id);
+      this.items.splice(index, 1);
+    },
     loadInitialValueDetails() {
       let params = {};
 
@@ -134,6 +146,11 @@ export default {
       td, th {
         padding: @space-1 @space-2;
         border: 1px solid @color-light-grey;
+      }
+
+      .level51-ajaxMultiSelectField-actions {
+        width: 60px;
+        text-align: center;
       }
     }
   }
