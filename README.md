@@ -1,6 +1,6 @@
 # SilverStripe Ajax Select Field
 
-This module adds a `AjaxSelectField` which allows to select a single result returned from an ajax endpoint.
+This module adds a `AjaxSelectField` and a `AjaxMultiSelectField` to select results returned from an ajax endpoint.
 
 ## Result Fetching
 Results can be fetched from a custom endpoint (using the `setEndpoint(ENDPOINT_URL)` method) or using a callback function passed in to the field using `setSearchCallback` (see example below).
@@ -21,10 +21,14 @@ The response has to be a JSON array with an object per result, where each result
 ```
 
 ## Storage
+### Single Select (AjaxSelectField)
 By default the whole result (with all it's properties) will be stored in the DB as JSON string, although there is also an "id only" mode.
 
 So the DB value will look like `{ "id": "1", "title": "Home" }` with `idOnlyMode = false`.
 With the mode activated only the id will be stored (as with the default DropdownField).
+
+### Multi Select (AjaxMultiSelectField)
+The results will be stored as JSON array containing the IDs of the selected items, so e.g. `["1", "2"]`.
 
 ## Methods / Options
 ### setEndpoint(string)
@@ -45,16 +49,20 @@ Set a list of custom GET vars which should be added to each request. Have to be 
 ### setSearchHeaders(array)
 Set a list of custom request headers sent with each search request. Have to be in format ["key" => "value"].
 
-### setIdOnlyMode(bool)
+### setIdOnlyMode(bool) [only single select]
 En-/disable the idOnlyMode.
 If active the field will only store the "id" of the selected result. Otherwise the full result payload will be stored.
 
 Note that the search endpoint or callback has to support requests with a ?id param returning only that one result if the mode is active.
 
+### setDisplayFields(array) [only multi select]
+Define the list of fields to display for selected items, so basically the table columns. Defaults to `id` and `title`. 
+
 ## Installation
 `composer require level51/silverstripe-ajax-select-field`
 
 ## Usage Example
+### Single Select
 ```php
 AjaxSelectField::create('MyField', 'My Field Label')
     ->setSearchCallback(
@@ -75,6 +83,30 @@ AjaxSelectField::create('MyField', 'My Field Label')
 
             return $results;
     })
+```
+
+### Multi Select
+```php
+AjaxMultiSelectField::create('MyField', 'My Field Label')
+    ->setSearchCallback(
+        function ($query, $request) {
+            // Return detail info for the selected ids on load
+            if ($ids = $request->getVar('ids')) {
+                foreach (SiteTree::get()->filter('ID', $ids) as $page) {
+                    return [
+                        'id' => $page->ID,
+                        'title' => $page->Title,
+                        'urlSegment' => $page->URLSegment // example of a custom field, see also below
+                    ];
+                }
+            } 
+            $results = [];
+            foreach (SiteTree::get()->filter('Title:PartialMatch', $query) as $page) {
+                $results[] = [ 'id' => $page->ID, 'title' => $page->Title, 'urlSegment' => $page->URLSegment ];
+            }
+
+            return $results;
+    })->setDisplayFields([ 'title' => 'Custom Label', 'urlSegment' => 'URL' ])
 ```
 
 

@@ -7,45 +7,43 @@ use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
 
 /**
- * Ajax Select / Dropdown field.
+ * Ajax multi select field.
  *
- * Allows to select a single value/entry using a custom api endpoint or callback function.
+ * Allows to select multiple values/items using a custom api endpoint or callback function.
  *
  * Usage:
  * ```
- * AjaxSelectField::create('MyField', 'AjaxSelectExample')
+ * AjaxMultiSelectField::create('MyField', 'AjaxSelectExample')
  *      ->setSearchCallback(
  *          function ($query, $request) {
- *              // This part is only required if the idOnlyMode is active
- *              if ($id = $request->getVar('id')) {
- *                  $page = SiteTree::get()->byID($id);
- *
- *                  return [
- *                      'id' => $page->ID,
- *                      'title' => $page->Title
- *                  ];
+ *              // Return detail info for the selected ids on load
+ *              if ($ids = $request->getVar('ids')) {
+ *                  foreach (SiteTree::get()->filter('ID', $ids) as $page) {
+ *                      return [
+ *                          'id' => $page->ID,
+ *                          'title' => $page->Title,
+ *                          'urlSegment' => $page->URLSegment // example of a custom field, see also below
+ *                      ];
+ *                  }
  *              }
  *
  *              $results = [];
  *              foreach (SiteTree::get()->filter('Title:PartialMatch', $query) as $page) {
- *                  $results[] = [ 'id' => $page->ID, 'title' => $page->Title ];
+ *                  $results[] = [ 'id' => $page->ID, 'title' => $page->Title, 'urlSegment' => $page->URLSegment ];
  *              }
  *
  *              return $results;
  *          }
- *      )
+ *      )->setDisplayFields([ 'title' => 'Custom Label', 'urlSegment' => 'URL' ])
  * ```
  *
  * @package Level51\AjaxSelectField
  */
-class AjaxSelectField extends FormField
+class AjaxMultiSelectField extends FormField
 {
     use AjaxSelectFieldTrait;
 
-    /**
-     * @var bool Option to store only the id instead of the full selection payload
-     */
-    private $idOnlyMode = false;
+    private $displayFields = [];
 
     public function __construct($name, $title = null, $value = null)
     {
@@ -58,10 +56,35 @@ class AjaxSelectField extends FormField
             throw new \Exception(_t(__CLASS__ . '.ERROR_SEARCH_CONFIG'));
         }
 
-        Requirements::javascript('level51/silverstripe-ajax-select-field: client/dist/ajaxSelectField.js');
-        Requirements::css('level51/silverstripe-ajax-select-field: client/dist/ajaxSelectField.css');
+        Requirements::javascript('level51/silverstripe-ajax-select-field: client/dist/ajaxMultiSelectField.js');
+        Requirements::css('level51/silverstripe-ajax-select-field: client/dist/ajaxMultiSelectField.css');
 
         return parent::Field($properties);
+    }
+
+    /**
+     * Set the fields which should be shown for selected items.
+     *
+     * @param array $fields
+     * @return $this
+     */
+    public function setDisplayFields($fields): AjaxMultiSelectField
+    {
+        $this->displayFields = $fields;
+
+        return $this;
+    }
+
+    public function getDisplayFields(): array
+    {
+        if (!$this->displayFields) {
+            return [
+                'id'    => 'ID',
+                'title' => 'Title'
+            ];
+        }
+
+        return $this->displayFields;
     }
 
     /**
@@ -83,46 +106,23 @@ class AjaxSelectField extends FormField
                     'placeholder'    => $this->placeholder ?: _t(__CLASS__ . '.SEARCH_PLACEHOLDER'),
                     'getVars'        => $this->getVars,
                     'headers'        => $this->searchHeaders,
-                    'idOnlyMode'     => $this->idOnlyMode
+                    'displayFields'  => $this->getDisplayFields()
                 ]
             ]
         );
     }
 
     /**
-     * Get the current value prepared for the vue component (depending on the mode).
+     * Get the current value prepared for the vue component.
      *
-     * @return string|int|array|null
+     * @return array|null
      */
-    private function getValueForComponent()
+    private function getValueForComponent(): ?array
     {
         if ($value = $this->Value()) {
-            if ($this->idOnlyMode) {
-                return $value;
-            }
-
             return json_decode($value, true);
         }
 
         return null;
-    }
-
-    /**
-     * En-/disable the idOnlyMode.
-     *
-     * If active the field will only store the "id" of the selected result.
-     * Otherwise the full result payload will be stored.
-     *
-     * Note that the search endpoint or callback has to support requests with a ?id param
-     * returning only that one result if the mode is active.
-     *
-     * @param boolean $idOnlyModeActive
-     * @return $this
-     */
-    public function setIdOnlyMode($idOnlyModeActive): AjaxSelectField
-    {
-        $this->idOnlyMode = $idOnlyModeActive;
-
-        return $this;
     }
 }

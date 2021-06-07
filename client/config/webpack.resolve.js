@@ -2,7 +2,8 @@ const path = require('path');
 
 const alias = {
   vue$: 'vue/dist/vue.common.js',
-  src: path.resolve(__dirname, '../src/js')
+  src: path.resolve(__dirname, '../src/js'),
+  styles: path.resolve(__dirname, '../src/styles')
 };
 
 const extensions = ['.js', '.vue', '.json', '.less'];
