@@ -11,7 +11,8 @@ const resolve = require('./webpack.resolve').forWebpack;
 module.exports = env => ({
 
   entry: {
-    ajaxSelectField: ['core-js/stable', 'regenerator-runtime/runtime', 'src/ajaxSelectField.js']
+    ajaxSelectField: ['core-js/stable', 'regenerator-runtime/runtime', 'src/fields/ajaxSelectField.js'],
+    ajaxMultiSelectField: ['core-js/stable', 'regenerator-runtime/runtime', 'src/fields/ajaxMultiSelectField.js'],
   },
 
   output: {

@@ -1855,10 +1855,10 @@ module.exports = {
 
 /***/ }),
 
-/***/ "./client/src/js/fields/ajaxSelectField.js":
-/*!*************************************************!*\
-  !*** ./client/src/js/fields/ajaxSelectField.js ***!
-  \*************************************************/
+/***/ "./client/src/js/fields/ajaxMultiSelectField.js":
+/*!******************************************************!*\
+  !*** ./client/src/js/fields/ajaxMultiSelectField.js ***!
+  \******************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -1866,7 +1866,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.dev.js");
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var vue_i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vue-i18n */ "./node_modules/vue-i18n/dist/vue-i18n.esm.js");
-/* harmony import */ var src_components_AjaxSelectField_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! src/components/AjaxSelectField.vue */ "./client/src/js/components/AjaxSelectField.vue");
+/* harmony import */ var src_components_AjaxMultiSelectField_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! src/components/AjaxMultiSelectField.vue */ "./client/src/js/components/AjaxMultiSelectField.vue");
 /* harmony import */ var src_utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! src/utils */ "./client/src/js/utils/index.js");
 
 
@@ -1881,7 +1881,7 @@ var i18n = new vue_i18n__WEBPACK_IMPORTED_MODULE_3__.default({
 var render = function render(el) {
   new (vue__WEBPACK_IMPORTED_MODULE_2___default())({
     render: function render(h) {
-      return h(src_components_AjaxSelectField_vue__WEBPACK_IMPORTED_MODULE_0__.default, {
+      return h(src_components_AjaxMultiSelectField_vue__WEBPACK_IMPORTED_MODULE_0__.default, {
         props: {
           payload: JSON.parse(el.dataset.payload)
         }
@@ -1891,7 +1891,7 @@ var render = function render(el) {
   }).$mount("#".concat(el.id));
 };
 
-(0,src_utils__WEBPACK_IMPORTED_MODULE_1__.default)('.level51-ajaxSelectFieldPlaceholder', function (el) {
+(0,src_utils__WEBPACK_IMPORTED_MODULE_1__.default)('.level51-ajaxMultiSelectFieldPlaceholder', function (el) {
   setTimeout(function () {
     render(el);
   }, 1);
@@ -2081,10 +2081,10 @@ var watchElement = function watchElement(selector, fn) {
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-1[0].rules[0].use!./node_modules/vue-loader/lib/index.js??vue-loader-options!./client/src/js/components/AjaxSelectField.vue?vue&type=script&lang=js&":
-/*!********************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-1[0].rules[0].use!./node_modules/vue-loader/lib/index.js??vue-loader-options!./client/src/js/components/AjaxSelectField.vue?vue&type=script&lang=js& ***!
-  \********************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-1[0].rules[0].use!./node_modules/vue-loader/lib/index.js??vue-loader-options!./client/src/js/components/AjaxMultiSelectField.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-1[0].rules[0].use!./node_modules/vue-loader/lib/index.js??vue-loader-options!./client/src/js/components/AjaxMultiSelectField.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -2136,6 +2136,38 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2144,62 +2176,75 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
   data: function data() {
     return {
       term: '',
-      selection: null
+      items: []
     };
-  },
-  watch: {
-    cleanTerm: function cleanTerm(newVal) {
-      if (newVal.length < this.payload.config.minSearchChars && this.selection) {
-        this.selection = null;
-      }
-    }
   },
   created: function created() {
     if (this.payload.value) {
-      if (_typeof(this.payload.value) === 'object') {
-        this.selection = this.payload.value;
-        this.term = this.payload.value.title;
-      }
-
-      if (this.idOnlyMode && typeof this.payload.value === 'string') {
-        this.loadInitialValueDetails();
-      }
+      this.loadInitialValueDetails();
     }
   },
   computed: {
     dataValue: function dataValue() {
-      if (this.selection) {
-        return this.idOnlyMode ? this.selection.id : JSON.stringify(this.selection);
+      if (this.items.length > 0) {
+        return JSON.stringify(this.items.map(function (item) {
+          return item.id;
+        }));
       }
 
       return null;
     },
-    idOnlyMode: function idOnlyMode() {
-      return !!this.payload.config.idOnlyMode;
+    endpointWithParams: function endpointWithParams() {
+      var params = {};
+
+      if (this.payload.config.getVars && _typeof(this.payload.config.getVars) === 'object') {
+        params = _objectSpread({}, this.payload.config.getVars);
+      }
+
+      params.query = this.cleanTerm;
+
+      if (this.items.length > 0) {
+        params.items = this.items.map(function (item) {
+          return item.id;
+        });
+      }
+
+      return "".concat(this.endpoint, "?").concat(qs__WEBPACK_IMPORTED_MODULE_1___default().stringify(params, {
+        encode: true
+      }));
     }
   },
   methods: {
     selected: function selected(suggestion) {
-      if (!suggestion) return;
-      this.selection = _objectSpread({}, suggestion);
-    },
-    loadInitialValueDetails: function loadInitialValueDetails() {
       var _this = this;
 
-      if (!this.idOnlyMode) return;
+      if (!suggestion) return;
+      this.items.push(_objectSpread({}, suggestion));
+      setTimeout(function () {
+        _this.term = '';
+      }, 10);
+    },
+    remove: function remove(id) {
+      var index = this.items.findIndex(function (item) {
+        return item.id === id;
+      });
+      this.items.splice(index, 1);
+    },
+    loadInitialValueDetails: function loadInitialValueDetails() {
+      var _this2 = this;
+
       var params = {};
 
-      if (this.payload.config.getVars && _typeof(this.payload.config.getVars) === 'object' && this.payload.config.getVars !== null) {
+      if (this.payload.config.getVars && _typeof(this.payload.config.getVars) === 'object') {
         params = _objectSpread({}, this.payload.config.getVars);
       }
 
-      params.id = this.payload.value;
+      params.ids = this.payload.value;
       axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(this.endpoint, "?").concat(qs__WEBPACK_IMPORTED_MODULE_1___default().stringify(params, {
         encode: true
       })), this.searchAxiosConfig).then(function (response) {
         if (response && response.data) {
-          _this.selection = response.data;
-          _this.term = response.data.title;
+          _this2.items = response.data;
         }
       });
     }
@@ -17353,10 +17398,10 @@ module.exports = bind.call(Function.call, Object.prototype.hasOwnProperty);
 
 /***/ }),
 
-/***/ "./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./client/src/js/components/AjaxSelectField.vue?vue&type=style&index=0&lang=less&":
-/*!***********************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./client/src/js/components/AjaxSelectField.vue?vue&type=style&index=0&lang=less& ***!
-  \***********************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./client/src/js/components/AjaxMultiSelectField.vue?vue&type=style&index=0&lang=less&":
+/*!****************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./client/src/js/components/AjaxMultiSelectField.vue?vue&type=style&index=0&lang=less& ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -21843,10 +21888,10 @@ VueI18n.version = '8.24.4';
 
 /***/ }),
 
-/***/ "./client/src/js/components/AjaxSelectField.vue":
-/*!******************************************************!*\
-  !*** ./client/src/js/components/AjaxSelectField.vue ***!
-  \******************************************************/
+/***/ "./client/src/js/components/AjaxMultiSelectField.vue":
+/*!***********************************************************!*\
+  !*** ./client/src/js/components/AjaxMultiSelectField.vue ***!
+  \***********************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -21854,9 +21899,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _AjaxSelectField_vue_vue_type_template_id_c4c84c2c___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AjaxSelectField.vue?vue&type=template&id=c4c84c2c& */ "./client/src/js/components/AjaxSelectField.vue?vue&type=template&id=c4c84c2c&");
-/* harmony import */ var _AjaxSelectField_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AjaxSelectField.vue?vue&type=script&lang=js& */ "./client/src/js/components/AjaxSelectField.vue?vue&type=script&lang=js&");
-/* harmony import */ var _AjaxSelectField_vue_vue_type_style_index_0_lang_less___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AjaxSelectField.vue?vue&type=style&index=0&lang=less& */ "./client/src/js/components/AjaxSelectField.vue?vue&type=style&index=0&lang=less&");
+/* harmony import */ var _AjaxMultiSelectField_vue_vue_type_template_id_1b943bee___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AjaxMultiSelectField.vue?vue&type=template&id=1b943bee& */ "./client/src/js/components/AjaxMultiSelectField.vue?vue&type=template&id=1b943bee&");
+/* harmony import */ var _AjaxMultiSelectField_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AjaxMultiSelectField.vue?vue&type=script&lang=js& */ "./client/src/js/components/AjaxMultiSelectField.vue?vue&type=script&lang=js&");
+/* harmony import */ var _AjaxMultiSelectField_vue_vue_type_style_index_0_lang_less___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AjaxMultiSelectField.vue?vue&type=style&index=0&lang=less& */ "./client/src/js/components/AjaxMultiSelectField.vue?vue&type=style&index=0&lang=less&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -21867,9 +21912,9 @@ __webpack_require__.r(__webpack_exports__);
 /* normalize component */
 
 var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__.default)(
-  _AjaxSelectField_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__.default,
-  _AjaxSelectField_vue_vue_type_template_id_c4c84c2c___WEBPACK_IMPORTED_MODULE_0__.render,
-  _AjaxSelectField_vue_vue_type_template_id_c4c84c2c___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  _AjaxMultiSelectField_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__.default,
+  _AjaxMultiSelectField_vue_vue_type_template_id_1b943bee___WEBPACK_IMPORTED_MODULE_0__.render,
+  _AjaxMultiSelectField_vue_vue_type_template_id_1b943bee___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
   false,
   null,
   null,
@@ -21879,15 +21924,15 @@ var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__
 
 /* hot reload */
 if (false) { var api; }
-component.options.__file = "client/src/js/components/AjaxSelectField.vue"
+component.options.__file = "client/src/js/components/AjaxMultiSelectField.vue"
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
 
 /***/ }),
 
-/***/ "./client/src/js/components/AjaxSelectField.vue?vue&type=script&lang=js&":
-/*!*******************************************************************************!*\
-  !*** ./client/src/js/components/AjaxSelectField.vue?vue&type=script&lang=js& ***!
-  \*******************************************************************************/
+/***/ "./client/src/js/components/AjaxMultiSelectField.vue?vue&type=script&lang=js&":
+/*!************************************************************************************!*\
+  !*** ./client/src/js/components/AjaxMultiSelectField.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -21895,45 +21940,45 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_1_0_rules_0_use_node_modules_vue_loader_lib_index_js_vue_loader_options_AjaxSelectField_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-1[0].rules[0].use!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./AjaxSelectField.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-1[0].rules[0].use!./node_modules/vue-loader/lib/index.js??vue-loader-options!./client/src/js/components/AjaxSelectField.vue?vue&type=script&lang=js&");
- /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_1_0_rules_0_use_node_modules_vue_loader_lib_index_js_vue_loader_options_AjaxSelectField_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__.default); 
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_1_0_rules_0_use_node_modules_vue_loader_lib_index_js_vue_loader_options_AjaxMultiSelectField_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-1[0].rules[0].use!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./AjaxMultiSelectField.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-1[0].rules[0].use!./node_modules/vue-loader/lib/index.js??vue-loader-options!./client/src/js/components/AjaxMultiSelectField.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_1_0_rules_0_use_node_modules_vue_loader_lib_index_js_vue_loader_options_AjaxMultiSelectField_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__.default); 
 
 /***/ }),
 
-/***/ "./client/src/js/components/AjaxSelectField.vue?vue&type=style&index=0&lang=less&":
-/*!****************************************************************************************!*\
-  !*** ./client/src/js/components/AjaxSelectField.vue?vue&type=style&index=0&lang=less& ***!
-  \****************************************************************************************/
+/***/ "./client/src/js/components/AjaxMultiSelectField.vue?vue&type=style&index=0&lang=less&":
+/*!*********************************************************************************************!*\
+  !*** ./client/src/js/components/AjaxMultiSelectField.vue?vue&type=style&index=0&lang=less& ***!
+  \*********************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_mini_css_extract_plugin_dist_loader_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_less_loader_dist_cjs_js_node_modules_vue_loader_lib_index_js_vue_loader_options_AjaxSelectField_vue_vue_type_style_index_0_lang_less___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/mini-css-extract-plugin/dist/loader.js!../../../../node_modules/css-loader/dist/cjs.js!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/less-loader/dist/cjs.js!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./AjaxSelectField.vue?vue&type=style&index=0&lang=less& */ "./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./client/src/js/components/AjaxSelectField.vue?vue&type=style&index=0&lang=less&");
+/* harmony import */ var _node_modules_mini_css_extract_plugin_dist_loader_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_less_loader_dist_cjs_js_node_modules_vue_loader_lib_index_js_vue_loader_options_AjaxMultiSelectField_vue_vue_type_style_index_0_lang_less___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/mini-css-extract-plugin/dist/loader.js!../../../../node_modules/css-loader/dist/cjs.js!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/less-loader/dist/cjs.js!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./AjaxMultiSelectField.vue?vue&type=style&index=0&lang=less& */ "./node_modules/mini-css-extract-plugin/dist/loader.js!./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./client/src/js/components/AjaxMultiSelectField.vue?vue&type=style&index=0&lang=less&");
 
 
 /***/ }),
 
-/***/ "./client/src/js/components/AjaxSelectField.vue?vue&type=template&id=c4c84c2c&":
-/*!*************************************************************************************!*\
-  !*** ./client/src/js/components/AjaxSelectField.vue?vue&type=template&id=c4c84c2c& ***!
-  \*************************************************************************************/
+/***/ "./client/src/js/components/AjaxMultiSelectField.vue?vue&type=template&id=1b943bee&":
+/*!******************************************************************************************!*\
+  !*** ./client/src/js/components/AjaxMultiSelectField.vue?vue&type=template&id=1b943bee& ***!
+  \******************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AjaxSelectField_vue_vue_type_template_id_c4c84c2c___WEBPACK_IMPORTED_MODULE_0__.render),
-/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AjaxSelectField_vue_vue_type_template_id_c4c84c2c___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AjaxMultiSelectField_vue_vue_type_template_id_1b943bee___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AjaxMultiSelectField_vue_vue_type_template_id_1b943bee___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AjaxSelectField_vue_vue_type_template_id_c4c84c2c___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./AjaxSelectField.vue?vue&type=template&id=c4c84c2c& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./client/src/js/components/AjaxSelectField.vue?vue&type=template&id=c4c84c2c&");
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AjaxMultiSelectField_vue_vue_type_template_id_1b943bee___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./AjaxMultiSelectField.vue?vue&type=template&id=1b943bee& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./client/src/js/components/AjaxMultiSelectField.vue?vue&type=template&id=1b943bee&");
 
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./client/src/js/components/AjaxSelectField.vue?vue&type=template&id=c4c84c2c&":
-/*!****************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./client/src/js/components/AjaxSelectField.vue?vue&type=template&id=c4c84c2c& ***!
-  \****************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./client/src/js/components/AjaxMultiSelectField.vue?vue&type=template&id=1b943bee&":
+/*!*********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./client/src/js/components/AjaxMultiSelectField.vue?vue&type=template&id=1b943bee& ***!
+  \*********************************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -21948,7 +21993,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "level51-ajaxSelectFieldBase level51-ajaxSelectField" },
+    { staticClass: "level51-ajaxSelectFieldBase level51-ajaxMultiSelectField" },
     [
       _c(
         "vue-simple-suggest",
@@ -21987,6 +22032,78 @@ var render = function() {
           })
         ]
       ),
+      _vm._v(" "),
+      _vm.items.length > 0
+        ? _c("div", { staticClass: "level51-ajaxMultiSelectField-items" }, [
+            _c(
+              "table",
+              [
+                _c(
+                  "tr",
+                  [
+                    _vm._l(_vm.payload.config.displayFields, function(
+                      label,
+                      key
+                    ) {
+                      return _c("th", { key: key }, [
+                        _vm._v("\n          " + _vm._s(label) + "\n        ")
+                      ])
+                    }),
+                    _vm._v(" "),
+                    _c("th", {
+                      staticClass: "level51-ajaxMultiSelectField-actions"
+                    })
+                  ],
+                  2
+                ),
+                _vm._v(" "),
+                _vm._l(_vm.items, function(item) {
+                  return _c(
+                    "tr",
+                    { key: item.id },
+                    [
+                      _vm._l(_vm.payload.config.displayFields, function(
+                        label,
+                        key
+                      ) {
+                        return _c("td", { key: key + "_" + item.id }, [
+                          _vm._v(
+                            "\n          " + _vm._s(item[key]) + "\n        "
+                          )
+                        ])
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "td",
+                        { staticClass: "level51-ajaxMultiSelectField-actions" },
+                        [
+                          _c(
+                            "a",
+                            {
+                              attrs: {
+                                href: "",
+                                title: _vm.$t("actions.remove")
+                              },
+                              on: {
+                                click: function($event) {
+                                  $event.preventDefault()
+                                  return _vm.remove(item.id)
+                                }
+                              }
+                            },
+                            [_c("i", { staticClass: "font-icon-link-broken" })]
+                          )
+                        ]
+                      )
+                    ],
+                    2
+                  )
+                })
+              ],
+              2
+            )
+          ])
+        : _vm._e(),
       _vm._v(" "),
       _c("input", {
         attrs: { type: "hidden", name: _vm.payload.name },
@@ -34906,8 +35023,8 @@ module.exports = Vue;
 /******/ 	// This entry module used 'module' so it can't be inlined
 /******/ 	__webpack_require__("./node_modules/core-js/stable/index.js");
 /******/ 	__webpack_require__("./node_modules/regenerator-runtime/runtime.js");
-/******/ 	var __webpack_exports__ = __webpack_require__("./client/src/js/fields/ajaxSelectField.js");
+/******/ 	var __webpack_exports__ = __webpack_require__("./client/src/js/fields/ajaxMultiSelectField.js");
 /******/ 	
 /******/ })()
 ;
-//# sourceMappingURL=ajaxSelectField.js.map
+//# sourceMappingURL=ajaxMultiSelectField.js.map
