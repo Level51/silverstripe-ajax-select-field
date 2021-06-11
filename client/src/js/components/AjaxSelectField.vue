@@ -44,7 +44,8 @@ export default {
   },
   watch: {
     cleanTerm(newVal) {
-      if (newVal.length < this.payload.config.minSearchChars && this.selection) {
+      if ((newVal.length < this.payload.config.minSearchChars || newVal.length === 0)
+        && this.selection) {
         this.selection = null;
       }
     }
