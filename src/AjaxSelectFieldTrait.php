@@ -68,7 +68,7 @@ trait AjaxSelectFieldTrait
      * @param string $endpoint
      * @return $this
      */
-    public function setEndpoint($endpoint): AjaxSelectFieldTrait
+    public function setEndpoint($endpoint)
     {
         $this->searchEndpoint = $endpoint;
 
@@ -87,7 +87,7 @@ trait AjaxSelectFieldTrait
      * @return $this
      * @throws \Exception
      */
-    public function setSearchCallback($callback): AjaxSelectFieldTrait
+    public function setSearchCallback($callback)
     {
         if ($callback && is_callable($callback)) {
             $this->searchCallback = $callback;
@@ -104,7 +104,7 @@ trait AjaxSelectFieldTrait
      * @param int $chars
      * @return $this
      */
-    public function setMinSearchChars($chars): AjaxSelectFieldTrait
+    public function setMinSearchChars($chars)
     {
         $this->minSearchChars = $chars;
 
@@ -117,7 +117,7 @@ trait AjaxSelectFieldTrait
      * @param string $placeholder
      * @return $this
      */
-    public function setPlaceholder($placeholder): AjaxSelectFieldTrait
+    public function setPlaceholder($placeholder)
     {
         $this->placeholder = $placeholder;
 
@@ -132,7 +132,7 @@ trait AjaxSelectFieldTrait
      * @param array $vars
      * @return $this
      */
-    public function setGetVars($vars): AjaxSelectFieldTrait
+    public function setGetVars($vars)
     {
         $this->getVars = $vars;
 
@@ -148,7 +148,7 @@ trait AjaxSelectFieldTrait
      *
      * @return AjaxSelectField
      */
-    public function setSearchHeaders($headers): AjaxSelectFieldTrait
+    public function setSearchHeaders($headers)
     {
         $this->searchHeaders = $headers;
 
