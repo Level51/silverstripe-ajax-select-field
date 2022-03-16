@@ -1,5 +1,5 @@
 {
-  "name": "level51/silverstripe-ajax-select-field",
+  "name": "sunnysideup/silverstripe-ajax-select-field",
   "version": "0.2.1",
   "time": "2021-06-11",
   "description": "Ajax Select Field for Silverstripe using vue.js",
