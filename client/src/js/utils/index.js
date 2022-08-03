@@ -46,4 +46,26 @@ const watchElement = (selector, fn) => {
   check();
 };
 
-export default watchElement;
+const arrayCompareFunction = (key, order = 'asc') => (a, b) => {
+  let varA = key.split('.').reduce((o, i) => o[i], a);
+  if (typeof varA === 'string') varA = varA.toUpperCase();
+
+  let varB = key.split('.').reduce((o, i) => o[i], b);
+  if (typeof varB === 'string') varB = varB.toUpperCase();
+
+  if (!varA && !varB) return 0;
+
+  let comparison = 0;
+
+  if (!varA) comparison = -1;
+  if (!varB) comparison = 1;
+
+  if (varA > varB) comparison = 1;
+  else if (varA < varB) comparison = -1;
+
+  return order === 'desc' ? comparison * -1 : comparison;
+};
+
+const sortArray = (array, key, order = 'asc') => array.sort(arrayCompareFunction(key, order));
+
+export { watchElement, sortArray };

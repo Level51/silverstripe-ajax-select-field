@@ -58,6 +58,9 @@ Note that the search endpoint or callback has to support requests with a ?id par
 ### setDisplayFields(array) [only multi select]
 Define the list of fields to display for selected items, so basically the table columns. Defaults to `id` and `title`. 
 
+### enableSorting / disableSorting [only multi select]
+En-/disable the ability to sort the selected items by their display fields.
+
 ## Installation
 `composer require level51/silverstripe-ajax-select-field`
 
