@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueI18n from 'vue-i18n';
 import AjaxSelectField from 'src/components/AjaxMultiSelectField.vue';
-import watchElement from 'src/utils';
+import { watchElement } from 'src/utils';
 
 Vue.use(VueI18n);
 

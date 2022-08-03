@@ -45,6 +45,8 @@ class AjaxMultiSelectField extends FormField
 
     private $displayFields = [];
 
+    private $isSortable = false;
+
     public function __construct($name, $title = null, $value = null)
     {
         parent::__construct($name, $title, $value);
@@ -87,6 +89,20 @@ class AjaxMultiSelectField extends FormField
         return $this->displayFields;
     }
 
+    public function enableSorting(): AjaxMultiSelectField
+    {
+        $this->isSortable = true;
+
+        return $this;
+    }
+
+    public function disableSorting(): AjaxMultiSelectField
+    {
+        $this->isSortable = false;
+
+        return $this;
+    }
+
     /**
      * Get the payload/config passed to the vue component.
      *
@@ -106,7 +122,8 @@ class AjaxMultiSelectField extends FormField
                     'placeholder'    => $this->placeholder ?: _t(__CLASS__ . '.SEARCH_PLACEHOLDER'),
                     'getVars'        => $this->getVars,
                     'headers'        => $this->searchHeaders,
-                    'displayFields'  => $this->getDisplayFields()
+                    'displayFields'  => $this->getDisplayFields(),
+                    'isSortable'     => $this->isSortable
                 ]
             ]
         );

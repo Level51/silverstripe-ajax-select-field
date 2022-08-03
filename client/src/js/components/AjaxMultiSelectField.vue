@@ -27,18 +27,29 @@
       v-if="items.length > 0">
       <table>
         <tr>
-          <th
-            v-for="(label, key) in payload.config.displayFields"
-            :key="key">
-            {{ label }}
-          </th>
+          <template v-if="payload.config.isSortable">
+            <SortableColumnHeader
+              v-for="(label, key) in displayFields"
+              :key="key"
+              :label="label"
+              :sort-key="key"
+              :current-sort="sort"
+              @input="sort = $event"/>
+          </template>
+          <template v-else>
+            <th
+              v-for="(label, key) in displayFields"
+              :key="key">
+              {{ label }}
+            </th>
+          </template>
           <th class="level51-ajaxMultiSelectField-actions" />
         </tr>
         <tr
-          v-for="item in items"
+          v-for="item in preparedItems"
           :key="item.id">
           <td
-            v-for="(label, key) in payload.config.displayFields"
+            v-for="(label, key) in displayFields"
             :key="`${key}_${item.id}`">
             {{ item[key] }}
           </td>
@@ -65,13 +76,17 @@
 import axios from 'axios';
 import qs from 'qs';
 import selectFieldMixin from 'src/mixins/selectField';
+import { sortArray } from 'src/utils';
+import SortableColumnHeader from 'src/components/SortableColumnHeader.vue';
 
 export default {
   mixins: [selectFieldMixin],
+  components: { SortableColumnHeader },
   data() {
     return {
       term: '',
-      items: []
+      items: [],
+      sort: null,
     };
   },
   created() {
@@ -104,6 +119,16 @@ export default {
 
       return `${this.endpoint}?${qs.stringify(params, { encode: true })}`;
     },
+    displayFields() {
+      return this.payload.config.displayFields;
+    },
+    preparedItems() {
+      if (this.sort && this.sort.field) {
+        return sortArray(this.items, this.sort.field, this.sort.order || 'asc');
+      }
+
+      return this.items;
+    }
   },
   methods: {
     selected(suggestion) {
