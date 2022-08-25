@@ -10,7 +10,8 @@
       @select="selected"
       ref="suggestField"
       :prevent-submit="false"
-      :min-length="payload.config.minSearchChars">
+      :min-length="payload.config.minSearchChars"
+      :max-suggestions="0">
       <input
         :placeholder="payload.config.placeholder"
         type="text"
