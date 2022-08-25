@@ -37,6 +37,8 @@
   border-top: 0;
   border-bottom-left-radius: 0.23rem;
   border-bottom-right-radius: 0.23rem;
+  max-height: 360px;
+  overflow-y: auto;
 }
 .level51-ajaxSelectFieldBase .vue-simple-suggest .suggestions .suggest-item {
   cursor: pointer;
@@ -107,6 +109,8 @@
   border-top: 0;
   border-bottom-left-radius: 0.23rem;
   border-bottom-right-radius: 0.23rem;
+  max-height: 360px;
+  overflow-y: auto;
 }
 .level51-ajaxSelectFieldBase .vue-simple-suggest .suggestions .suggest-item {
   cursor: pointer;
