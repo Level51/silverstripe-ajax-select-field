@@ -66,9 +66,9 @@ trait AjaxSelectFieldTrait
      * If both is set, the searchEndpoint is prefered.
      *
      * @param string $endpoint
-     * @return $this
+     * @return self
      */
-    public function setEndpoint($endpoint): AjaxSelectFieldTrait
+    public function setEndpoint($endpoint): self
     {
         $this->searchEndpoint = $endpoint;
 
@@ -84,15 +84,15 @@ trait AjaxSelectFieldTrait
      * If both is set, the searchEndpoint is prefered.
      *
      * @param callable $callback
-     * @return $this
+     * @return self
      * @throws \Exception
      */
-    public function setSearchCallback($callback): AjaxSelectFieldTrait
+    public function setSearchCallback($callback): self
     {
         if ($callback && is_callable($callback)) {
             $this->searchCallback = $callback;
         } else {
-            throw new \Exception(_t(__CLASS__ . '.ERROR_INVALID_CALLBACK'));
+            throw new \Exception(_t(__CLASS__ . '.ERROR_INVALID_CALLBACK', 'Invalid callback passed in. Has do be a callable function.'));
         }
 
         return $this;
@@ -102,9 +102,9 @@ trait AjaxSelectFieldTrait
      * Define the min length of search terms needed to execute the search.
      *
      * @param int $chars
-     * @return $this
+     * @return self
      */
-    public function setMinSearchChars($chars): AjaxSelectFieldTrait
+    public function setMinSearchChars($chars): self
     {
         $this->minSearchChars = $chars;
 
@@ -115,9 +115,9 @@ trait AjaxSelectFieldTrait
      * Set a custom placeholder.
      *
      * @param string $placeholder
-     * @return $this
+     * @return self
      */
-    public function setPlaceholder($placeholder): AjaxSelectFieldTrait
+    public function setPlaceholder($placeholder): self
     {
         $this->placeholder = $placeholder;
 
@@ -130,9 +130,9 @@ trait AjaxSelectFieldTrait
      * Have to be in format ["key" => "value"].
      *
      * @param array $vars
-     * @return $this
+     * @return self
      */
-    public function setGetVars($vars): AjaxSelectFieldTrait
+    public function setGetVars($vars): self
     {
         $this->getVars = $vars;
 
@@ -146,9 +146,9 @@ trait AjaxSelectFieldTrait
      *
      * @param array $headers
      *
-     * @return AjaxSelectField
+     * @return self
      */
-    public function setSearchHeaders($headers): AjaxSelectFieldTrait
+    public function setSearchHeaders($headers): self
     {
         $this->searchHeaders = $headers;
 
