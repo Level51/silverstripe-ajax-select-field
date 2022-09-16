@@ -55,7 +55,7 @@ class AjaxMultiSelectField extends FormField
     public function Field($properties = array())
     {
         if (!$this->searchEndpoint && !$this->searchCallback) {
-            throw new \Exception(_t(__CLASS__ . '.ERROR_SEARCH_CONFIG'));
+            throw new \Exception(_t(__CLASS__ . '.ERROR_SEARCH_CONFIG', 'Invalid field configuration, a searchEndpoint OR searchCallback has to be set'));
         }
 
         Requirements::javascript('level51/silverstripe-ajax-select-field: client/dist/ajaxMultiSelectField.js');
@@ -119,7 +119,7 @@ class AjaxMultiSelectField extends FormField
                 'config' => [
                     'minSearchChars' => $this->minSearchChars,
                     'searchEndpoint' => $this->searchEndpoint ?: $this->Link('search'),
-                    'placeholder'    => $this->placeholder ?: _t(__CLASS__ . '.SEARCH_PLACEHOLDER'),
+                    'placeholder'    => $this->placeholder ?: _t(__CLASS__ . '.SEARCH_PLACEHOLDER', 'Search'),
                     'getVars'        => $this->getVars,
                     'headers'        => $this->searchHeaders,
                     'displayFields'  => $this->getDisplayFields(),
