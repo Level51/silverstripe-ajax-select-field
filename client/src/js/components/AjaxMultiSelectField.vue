@@ -29,6 +29,7 @@
       <SlickList
         lock-axis="y"
         v-model="items"
+        use-drag-handle
         tag="table"
         :class="{ 'level51-ajaxMultiSelectField-table--dragable': manualSortingEnabled }">
         <tr>
@@ -66,7 +67,8 @@
           :disabled="!manualSortingEnabled">
           <td
             class="level51-ajaxMultiSelectField-dragHandle"
-            v-if="payload.config.isManuallySortable">
+            v-if="payload.config.isManuallySortable"
+            v-handle>
             <i
               v-if="manualSortingEnabled"
               class="font-icon-drag-handle" />
@@ -101,11 +103,12 @@ import qs from 'qs';
 import selectFieldMixin from 'src/mixins/selectField';
 import { sortArray, cloneObject } from 'src/utils';
 import SortableColumnHeader from 'src/components/SortableColumnHeader.vue';
-import { SlickList, SlickItem } from 'vue-slicksort';
+import { SlickList, SlickItem, HandleDirective } from 'vue-slicksort';
 
 export default {
   mixins: [selectFieldMixin],
   components: { SortableColumnHeader, SlickList, SlickItem },
+  directives: { handle: HandleDirective },
   data() {
     return {
       term: '',
@@ -211,7 +214,7 @@ export default {
       border: 1px solid @color-light-grey;
 
       &.level51-ajaxMultiSelectField-table--dragable {
-        tr td {
+        .level51-ajaxMultiSelectField-dragHandle {
           cursor: move;
         }
       }

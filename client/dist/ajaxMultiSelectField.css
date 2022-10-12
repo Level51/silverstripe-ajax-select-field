@@ -140,7 +140,7 @@
   border-radius: 0.23rem;
   border: 1px solid #ced5e1;
 }
-.level51-ajaxMultiSelectField .level51-ajaxMultiSelectField-items table.level51-ajaxMultiSelectField-table--dragable tr td {
+.level51-ajaxMultiSelectField .level51-ajaxMultiSelectField-items table.level51-ajaxMultiSelectField-table--dragable .level51-ajaxMultiSelectField-dragHandle {
   cursor: move;
 }
 .level51-ajaxMultiSelectField .level51-ajaxMultiSelectField-items table .level51-ajaxMultiSelectField-dragHandle {
