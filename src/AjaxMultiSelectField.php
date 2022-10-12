@@ -47,6 +47,8 @@ class AjaxMultiSelectField extends FormField
 
     private $isSortable = false;
 
+    private $isManuallySortable = false;
+
     public function __construct($name, $title = null, $value = null)
     {
         parent::__construct($name, $title, $value);
@@ -103,6 +105,20 @@ class AjaxMultiSelectField extends FormField
         return $this;
     }
 
+    public function enableManualSorting(): AjaxMultiSelectField
+    {
+        $this->isManuallySortable = true;
+
+        return $this;
+    }
+
+    public function disableManualSorting(): AjaxMultiSelectField
+    {
+        $this->isManuallySortable = false;
+
+        return $this;
+    }
+
     /**
      * Get the payload/config passed to the vue component.
      *
@@ -117,13 +133,14 @@ class AjaxMultiSelectField extends FormField
                 'value'  => $this->getValueForComponent(),
                 'lang'   => substr(Security::getCurrentUser()->Locale, 0, 2),
                 'config' => [
-                    'minSearchChars' => $this->minSearchChars,
-                    'searchEndpoint' => $this->searchEndpoint ?: $this->Link('search'),
-                    'placeholder'    => $this->placeholder ?: _t(__CLASS__ . '.SEARCH_PLACEHOLDER', 'Search'),
-                    'getVars'        => $this->getVars,
-                    'headers'        => $this->searchHeaders,
-                    'displayFields'  => $this->getDisplayFields(),
-                    'isSortable'     => $this->isSortable
+                    'minSearchChars'     => $this->minSearchChars,
+                    'searchEndpoint'     => $this->searchEndpoint ?: $this->Link('search'),
+                    'placeholder'        => $this->placeholder ?: _t(__CLASS__ . '.SEARCH_PLACEHOLDER', 'Search'),
+                    'getVars'            => $this->getVars,
+                    'headers'            => $this->searchHeaders,
+                    'displayFields'      => $this->getDisplayFields(),
+                    'isSortable'         => $this->isSortable,
+                    'isManuallySortable' => $this->isManuallySortable,
                 ]
             ]
         );

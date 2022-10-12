@@ -1,5 +1,6 @@
 {
   "actions": {
-    "remove": "Remove"
+    "remove": "Remove",
+    "manualSort": "Manual Sort"
   }
 }
