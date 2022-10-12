@@ -68,4 +68,6 @@ const arrayCompareFunction = (key, order = 'asc') => (a, b) => {
 
 const sortArray = (array, key, order = 'asc') => array.sort(arrayCompareFunction(key, order));
 
-export { watchElement, sortArray };
+const cloneObject = (value) => JSON.parse(JSON.stringify(value));
+
+export { watchElement, sortArray, cloneObject };
