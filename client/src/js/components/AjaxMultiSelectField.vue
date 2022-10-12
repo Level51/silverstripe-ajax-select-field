@@ -29,6 +29,8 @@
       <SlickList
         lock-axis="y"
         v-model="items"
+        :id="`slick-table-${payload.name}`"
+        :append-to="`#slick-table-${payload.name}`"
         use-drag-handle
         tag="table"
         :class="{ 'level51-ajaxMultiSelectField-table--dragable': manualSortingEnabled }">

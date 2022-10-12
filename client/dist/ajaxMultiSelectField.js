@@ -2533,6 +2533,8 @@ var render = function render() {
     },
     attrs: {
       "lock-axis": "y",
+      id: "slick-table-".concat(_vm.payload.name),
+      "append-to": "#slick-table-".concat(_vm.payload.name),
       "use-drag-handle": "",
       tag: "table"
     },
