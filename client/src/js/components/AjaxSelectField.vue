@@ -80,6 +80,10 @@ export default {
       if (!suggestion) return;
 
       this.selection = { ...suggestion };
+
+      this.$el.dispatchEvent(new CustomEvent('ajaxselectedvalue', {
+        detail: this.selection,
+      }));
     },
     loadInitialValueDetails() {
       if (!this.idOnlyMode) return;

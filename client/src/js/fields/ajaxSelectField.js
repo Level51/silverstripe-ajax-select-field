@@ -11,7 +11,7 @@ const i18n = new VueI18n({
 });
 
 const render = (el) => {
-  new Vue({
+  return new Vue({
     render(h) {
       return h(AjaxSelectField, {
         props: {
@@ -25,6 +25,10 @@ const render = (el) => {
 
 watchElement('.level51-ajaxSelectFieldPlaceholder', (el) => {
   setTimeout(() => {
-    render(el);
+    const rendered = render(el);
+
+    el.dispatchEvent(new CustomEvent('ajaxreplacedelement', {
+      detail: rendered.$el,
+    }));
   }, 1);
 });
