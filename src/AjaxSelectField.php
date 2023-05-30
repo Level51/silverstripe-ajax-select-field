@@ -3,6 +3,7 @@
 namespace Level51\AjaxSelectField;
 
 use SilverStripe\Forms\FormField;
+use SilverStripe\i18n\i18n;
 use SilverStripe\Security\Security;
 use SilverStripe\View\Requirements;
 
@@ -71,12 +72,14 @@ class AjaxSelectField extends FormField
      */
     public function getPayload(): string
     {
+        $locale =  ($user = Security::getCurrentUser()) ? $user->Locale : i18n::get_locale();
+        
         return json_encode(
             [
                 'id'     => $this->ID(),
                 'name'   => $this->getName(),
                 'value'  => $this->getValueForComponent(),
-                'lang'   => substr(Security::getCurrentUser()->Locale, 0, 2),
+                'lang'   => substr($locale, 0, 2),
                 'config' => [
                     'minSearchChars' => $this->minSearchChars,
                     'searchEndpoint' => $this->searchEndpoint ?: $this->Link('search'),
