@@ -118,6 +118,13 @@ export default {
       sort: null,
     };
   },
+  watch: {
+    dataValue(newVal) {
+      this.$el.dispatchEvent(new CustomEvent('level51-ajaxSelectField:change', {
+        detail: newVal,
+      }));
+    }
+  },
   created() {
     if (this.payload.value) {
       this.loadInitialValueDetails();
