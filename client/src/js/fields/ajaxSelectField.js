@@ -10,24 +10,22 @@ const i18n = new VueI18n({
   fallbackLocale: 'en'
 });
 
-const render = (el) => {
-  return new Vue({
-    render(h) {
-      return h(AjaxSelectField, {
-        props: {
-          payload: JSON.parse(el.dataset.payload)
-        }
-      });
-    },
-    i18n
-  }).$mount(`#${el.id}`);
-};
+const render = (el) => new Vue({
+  render(h) {
+    return h(AjaxSelectField, {
+      props: {
+        payload: JSON.parse(el.dataset.payload)
+      }
+    });
+  },
+  i18n
+}).$mount(`#${el.id}`);
 
 watchElement('.level51-ajaxSelectFieldPlaceholder', (el) => {
   setTimeout(() => {
     const rendered = render(el);
 
-    el.dispatchEvent(new CustomEvent('ajaxreplacedelement', {
+    el.dispatchEvent(new CustomEvent('level51-ajaxSelectField:mounted', {
       detail: rendered.$el,
     }));
   }, 1);

@@ -49,6 +49,11 @@ export default {
         && this.selection) {
         this.selection = null;
       }
+    },
+    dataValue(newVal) {
+      this.$el.dispatchEvent(new CustomEvent('level51-ajaxSelectField:change', {
+        detail: newVal,
+      }));
     }
   },
   created() {
@@ -80,10 +85,6 @@ export default {
       if (!suggestion) return;
 
       this.selection = { ...suggestion };
-
-      this.$el.dispatchEvent(new CustomEvent('ajaxselectedvalue', {
-        detail: this.selection,
-      }));
     },
     loadInitialValueDetails() {
       if (!this.idOnlyMode) return;
