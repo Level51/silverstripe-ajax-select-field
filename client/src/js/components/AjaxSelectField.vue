@@ -1,5 +1,7 @@
 <template>
-  <div class="level51-ajaxSelectFieldBase level51-ajaxSelectField">
+  <div
+    class="level51-ajaxSelectFieldBase level51-ajaxSelectField"
+    :class="{'level51-ajaxSelectFieldBase--disabled': isDisabled}">
     <vue-simple-suggest
       v-model="term"
       :list="suggest"
@@ -21,6 +23,12 @@
         autocorrect="off"
         autocapitalize="off"
         spellcheck="false">
+
+      <div
+        v-if="showLoader"
+        class="level51-ajaxSelectFieldBase-spinner level51-spin">
+        <i class="font-icon-spinner" />
+      </div>
     </vue-simple-suggest>
 
     <input
@@ -40,7 +48,8 @@ export default {
   data() {
     return {
       term: '',
-      selection: null
+      selection: null,
+      initialised: false,
     };
   },
   watch: {
@@ -61,15 +70,28 @@ export default {
       if (typeof this.payload.value === 'object') {
         this.selection = this.payload.value;
         this.term = this.payload.value.title;
+        this.initialised = true;
       }
 
       if (this.idOnlyMode && typeof this.payload.value === 'string') {
         this.loadInitialValueDetails();
       }
+    } else {
+      this.initialised = true;
     }
   },
   computed: {
+    isDisabled() {
+      return !this.initialised;
+    },
+    showLoader() {
+      return !this.initialised || this.isLoading;
+    },
     dataValue() {
+      if (!this.initialised && this.payload.value) {
+        return this.idOnlyMode ? this.payload.value : JSON.stringify(this.payload.value);
+      }
+
       if (this.selection) {
         return this.idOnlyMode ? this.selection.id : JSON.stringify(this.selection);
       }
@@ -106,6 +128,8 @@ export default {
             this.selection = response.data;
             this.term = response.data.title;
           }
+
+          this.initialised = true;
         });
     }
   }
