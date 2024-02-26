@@ -1,5 +1,7 @@
 <template>
-  <div class="level51-ajaxSelectFieldBase level51-ajaxMultiSelectField">
+  <div
+    class="level51-ajaxSelectFieldBase level51-ajaxMultiSelectField"
+    :class="{'level51-ajaxSelectFieldBase--disabled': isDisabled}">
     <vue-simple-suggest
       v-model="term"
       :list="suggest"
@@ -21,11 +23,17 @@
         autocorrect="off"
         autocapitalize="off"
         spellcheck="false">
+
+      <div
+        v-if="showLoader"
+        class="level51-ajaxSelectFieldBase-spinner level51-spin">
+        <i class="font-icon-spinner" />
+      </div>
     </vue-simple-suggest>
 
     <div
       class="level51-ajaxMultiSelectField-items"
-      v-if="items.length > 0">
+      v-if="initialised && items.length > 0">
       <SlickList
         lock-axis="y"
         v-model="items"
@@ -116,6 +124,7 @@ export default {
       term: '',
       items: [],
       sort: null,
+      initialised: false,
     };
   },
   watch: {
@@ -128,10 +137,22 @@ export default {
   created() {
     if (this.payload.value) {
       this.loadInitialValueDetails();
+    } else {
+      this.initialised = true;
     }
   },
   computed: {
+    isDisabled() {
+      return !this.initialised;
+    },
+    showLoader() {
+      return !this.initialised || this.isLoading;
+    },
     dataValue() {
+      if (!this.initialised && this.payload.value) {
+        return JSON.stringify(this.payload.value);
+      }
+
       if (this.items.length > 0) {
         return JSON.stringify(this.items.map((item) => item.id));
       }
@@ -200,6 +221,8 @@ export default {
             this.payload.value.forEach((id) => {
               this.items.push(response.data.find((row) => row.id === id));
             });
+
+            this.initialised = true;
           }
         });
     }

@@ -10,6 +10,11 @@ export default {
       required: true
     }
   },
+  data() {
+    return {
+      isLoading: false,
+    };
+  },
   created() {
     this.setLocale();
   },
@@ -55,10 +60,12 @@ export default {
         this.$i18n.locale = locale;
       }
     },
-    suggest() {
-      return new Promise((resolve) => {
-        if (this.cleanTerm.length < this.payload.config.minSearchChars) resolve([]);
-        else {
+    async suggest() {
+      this.isLoading = true;
+      const result = await new Promise((resolve) => {
+        if (this.cleanTerm.length < this.payload.config.minSearchChars) {
+          resolve([]);
+        } else {
           axios
             .get(this.endpointWithParams, this.searchAxiosConfig)
             .then((response) => {
@@ -66,6 +73,9 @@ export default {
             });
         }
       });
+      this.isLoading = false;
+
+      return result;
     }
   }
 };
